@@ -66,3 +66,59 @@ func contains(root *Node, v int) bool {
 		}
 	}
 }
+
+func (tree *BinarySearchTree) delete(v int) bool {
+	if tree.root != nil {
+		r := delete(tree.root, v)
+		if r != nil {
+			tree.root = r
+			return true
+		}
+	}
+	return false
+
+}
+
+func delete(root *Node, v int) *Node {
+	dummy := &Node{
+		value: 0,
+	}
+	dummy.nodes[1] = root
+
+	current := dummy
+	index := 1
+
+	var r *Node
+	var parent *Node
+
+	for current.nodes[index] != nil {
+		parent = current
+		current = current.nodes[index]
+		if current.value <= v {
+			index = 1
+		} else {
+			index = 0
+		}
+
+		if current.value == v {
+			r = current
+		}
+	}
+
+	if r != nil {
+		r.value = current.value
+
+		dirp := 0
+		if parent.nodes[1] == current {
+			dirp = 1
+		}
+
+		dirc := 0
+		if current.nodes[0] == nil {
+			dirc = 1
+		}
+		parent.nodes[dirp] = current.nodes[dirc]
+		return dummy.nodes[1]
+	}
+	return nil
+}
